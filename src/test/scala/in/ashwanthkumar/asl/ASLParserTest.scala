@@ -39,6 +39,7 @@ class ASLParserTest extends FlatSpec {
     pass.ResultPath should be(Option("$.coords"))
     pass.Next should be(Option("End"))
   }
+
   it should "parse Task State" in {
     val state =
       """
@@ -51,6 +52,12 @@ class ASLParserTest extends FlatSpec {
         |  "HeartbeatSeconds": 60
         |}
         |""".stripMargin
-    ASLParser.parse(stateInStateMachine(state))
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    val taskState    = stateMachine.states("TaskState").asInstanceOf[Task]
+    taskState.Comment should be(Option("Task State example"))
+    taskState.Resource should be("arn:aws:states:us-east-1:123456789012:task:HelloWorld")
+    taskState.Next should be(Some("NextState"))
+    taskState.TimeoutSeconds should be(Option(300L))
+    taskState.HeartbeatSeconds should be(Option(60L))
   }
 }

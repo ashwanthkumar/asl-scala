@@ -1,5 +1,6 @@
 package in.ashwanthkumar.asl
 
+import in.ashwanthkumar.asl.ErrorCodes.ErrorNames
 import spray.json._
 import spray.json.lenses.JsonLenses._
 
@@ -17,8 +18,52 @@ case class Pass(
     End: Option[Boolean]
 ) extends State
 
+case class Retrier(
+    ErrorEquals: List[ErrorNames],
+    IntervalSeconds: Option[Int] = Some(1),
+    MaxAttempts: Option[Int] = Some(3),
+    BackoffRate: Option[Double] = Some(2.0)
+)
+
+case class Catcher(
+    ErrorEquals: List[ErrorNames],
+    Next: String
+)
+
+case class Task(
+    Resource: String,
+    HeartbeatSeconds: Option[Long],
+    Comment: Option[String],
+    InputPath: Option[String],
+    OutputPath: Option[String],
+    Parameters: Option[JsObject],
+    ResultPath: Option[String],
+    Result: Option[JsObject],
+    Next: Option[String],
+    End: Option[Boolean],
+    TimeoutSeconds: Option[Long] = Some(60),
+    retriers: Option[List[Retrier]] = None,
+    catchers: Option[List[Catcher]] = None
+) extends State {
+
+  if (TimeoutSeconds.isDefined && HeartbeatSeconds.isDefined) {
+    require(
+      HeartbeatSeconds.get < TimeoutSeconds.get,
+      "The HeartbeatSeconds interval MUST be smaller than the TimeoutSeconds value."
+    )
+  }
+
+  // Ref - https://github.com/spray/spray-json/issues/257
+  // FIXME: We can remove these helpers once the above Issue is resolved
+  def retriersAsList: List[Retrier] = retriers.toList.flatten
+  def catchersAsList: List[Catcher] = catchers.toList.flatten
+}
+
 object JsonFormats extends DefaultJsonProtocol {
-  implicit val passFormat = jsonFormat8(Pass)
+  implicit val passFormat    = jsonFormat8(Pass)
+  implicit val retrierFormat = jsonFormat4(Retrier)
+  implicit val catcherFormat = jsonFormat2(Catcher)
+  implicit val taskFormat    = jsonFormat13(Task)
 }
 
 object ASLParser {
@@ -36,6 +81,8 @@ object ASLParser {
         val state = typeOfState match {
           case "Pass" =>
             stateSpec.convertTo[Pass]
+          case "Task" =>
+            stateSpec.convertTo[Task]
         }
 
         stateName -> state
