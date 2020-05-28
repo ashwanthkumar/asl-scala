@@ -1,10 +1,11 @@
 package in.ashwanthkumar.asl
 
 import org.scalatest.FlatSpec
-import org.scalatest.Matchers.{convertToAnyShouldWrapper, be}
+import org.scalatest.Matchers.{be, convertToAnyShouldWrapper}
+import spray.json.{JsNumber, JsObject}
 
 class ASLParserTest extends FlatSpec {
-  def stateInStateMachine(stateSpec: String) = {
+  def stateInStateMachine(stateSpec: String): String = {
     s"""
       |{
       |    "Comment": "A simple minimal example of the States language",
@@ -16,7 +17,8 @@ class ASLParserTest extends FlatSpec {
       |
       |""".stripMargin
   }
-  it should "parse Pass State" in {
+
+  "ASLParser" should "parse Pass State" in {
     val state =
       """
         |"No-op": {
@@ -29,7 +31,13 @@ class ASLParserTest extends FlatSpec {
         |  "Next": "End"
         |}
         |""".stripMargin
-    ASLParser.parse(stateInStateMachine(state))
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    stateMachine.comment should be(Option("A simple minimal example of the States language"))
+    stateMachine.startAt should be("Hello World")
+    val pass = stateMachine.states("No-op").asInstanceOf[Pass]
+    pass.Result should be(Some(JsObject("x-datum" -> JsNumber(0.381018), "y-datum" -> JsNumber(622.2269926397355))))
+    pass.ResultPath should be(Option("$.coords"))
+    pass.Next should be(Option("End"))
   }
   it should "parse Task State" in {
     val state =
