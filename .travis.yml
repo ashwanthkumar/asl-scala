@@ -1,8 +1,9 @@
 language: scala
+os: linux
+dist: bionic
 scala:
 - 2.12.11
 - 2.11.11
-sudo: false
 jdk:
 - openjdk8
 cache:
@@ -21,7 +22,7 @@ env:
 deploy:
 - provider: script
   script: "./.travis/publish.sh"
-  skip_cleanup: true
+  cleanup: true
   on:
     tags: true
     jdk: openjdk8
