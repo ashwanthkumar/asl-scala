@@ -1,6 +1,6 @@
 language: scala
 os: linux
-dist: bionic
+dist: xenial
 scala:
 - 2.12.11
 - 2.11.11
