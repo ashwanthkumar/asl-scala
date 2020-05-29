@@ -37,9 +37,10 @@ lazy val publishSettings = Seq(
   publishMavenStyle := true,
   // disable publishing test jars
   publishArtifact in Test := false,
-  // disable publishing the main docs jar
-  publishArtifact in (Compile, packageDoc) := false,
-  // disable publishing the main sources jar
+  // Ref - https://github.com/xerial/sbt-sonatype/issues/30#issuecomment-342532067
+  sources in (Compile, doc) := Seq(),
+  // we need to publish javadoc for Sonatype
+  publishArtifact in (Compile, packageDoc) := true,
   publishArtifact in (Compile, packageSrc) := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
