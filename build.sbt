@@ -18,7 +18,7 @@ lazy val asl = (project in file("."))
         scalafmtOnCompile := true,
       )
     ),
-    name := "asl",
+    name := "asl-scala",
     libraryDependencies ++= Seq(
       scalaTest,
       sprayJsonLens
