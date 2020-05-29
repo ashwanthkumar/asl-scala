@@ -4,7 +4,7 @@ set -ex
 
 cd ..
 
-sbt publishSigned
+sbt +publishSigned
 sbt sonatypeReleaseAll
 
 echo "Released"
