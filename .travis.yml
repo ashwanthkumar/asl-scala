@@ -21,7 +21,7 @@ env:
   - secure: "F1rXGIN/TGm4+xC99za+Pnie/T4iM8mN9UZVNUbfbrDvtqmmnXpG7a01TV9YI9sZriM9vn0s+YXlCiASMlQO8Cgft6xTE5lq6kAQV9ZkzqXazDAerwNky9PmfRMCoJqNe6I40xMDf19uSq0VXAHxkua35MjmWqqPsLxr1w371DU6QEDZp+zLcmN5D5pgZGYaSEe9ZYzqRMw84Vvw6xQ5ZNphqzj0jsWGdtdcFgVhWpdcLGkG2L/HNudN/d1nwJG1YpBHWql0uZecgAbt2atVh35KyMZ+uC7xOSaMROjk+Cdci/zzfaUVJ6INkd9UzwZTX4YzzIy9hbJmMMi0QtL3xmyd23hgHRJtMl8nfPdlKRbB6TY698o31cn365cWrTXGeWUKipw+altOnGW6TrjbLbk6hmQEeLqSISw+xjIx1EmXqZSyPvKA3vzPx2PH8FTQQySF1TifyQRI0Iz/vwAqFhH5gQ2882uO6byn1ZBRl/+xUacllpT4kNB1hrrsYm5CKGR5yxgCIO5AbkhsZKnorBSwhbIVwAhVFD3GNatOsLpjTOmcY4q1/94NKdPNb3jxmDzZ2L03NwaU4/f8F8arwcDXnJTLq/9kEsGBSFARF+2f8xynsVOaXCNk0ncUmQpBokrapsF+uC61MxNMg2OooNlh+doD9P2y9XOxMOn7zuw="
 deploy:
 - provider: script
-  script: .travis/publish.sh
+  script: bash .travis/publish.sh
   skip_cleanup: true
   on:
     tags: true
