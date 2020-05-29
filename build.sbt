@@ -31,9 +31,7 @@ lazy val publishSettings = Seq(
   /* START - sonatype publish related settings */
   pgpSecretRing := file("local.secring.gpg"),
   pgpPublicRing := file("local.pubring.gpg"),
-  // pgpPassphrase := Some(sys.env.getOrElse("GPG_PASSPHRASE", "").toCharArray),
-  pgpPassphrase := None,
-  useGpg := false,
+  // GPG Passphrase has to be set via PGP_PASSPHRASE environment variable
   /* END - sonatype publish related settings */
 
   publishMavenStyle := true,
