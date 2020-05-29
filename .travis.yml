@@ -22,7 +22,7 @@ env:
 deploy:
 - provider: script
   script: "./.travis/publish.sh"
-  cleanup: true
+  skip_cleanup: true
   on:
     tags: true
     jdk: openjdk8
