@@ -206,4 +206,21 @@ class ASLParserTest extends FlatSpec {
     rule.function should be(StringEquals("Private"))
   }
 
+  it should "parse Fail State" in {
+    val state =
+      """
+        |"FailState": {
+        |  "Type": "Fail",
+        |  "Cause": "Invalid response.",
+        |  "Error": "ErrorA"
+        |}
+        |""".stripMargin
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    stateMachine.comment should be(Option("A simple minimal example of the States language"))
+    stateMachine.startAt should be("Hello World")
+    val fail = stateMachine.states("FailState").asInstanceOf[Fail]
+    fail.Cause should be(Some("Invalid response."))
+    fail.Error should be(Option("ErrorA"))
+  }
+
 }
