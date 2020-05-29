@@ -38,6 +38,7 @@ lazy val publishSettings = Seq(
   // disable publishing test jars
   publishArtifact in Test := false,
   // Ref - https://github.com/xerial/sbt-sonatype/issues/30#issuecomment-342532067
+  // we'll not need this once this issue is updated / fixed -- https://issues.sonatype.org/browse/OSSRH-58035
   sources in (Compile, doc) := Seq(),
   // we need to publish javadoc for Sonatype
   publishArtifact in (Compile, packageDoc) := true,
