@@ -61,17 +61,18 @@ object FunctionJsonFormat extends DefaultJsonProtocol {
       JsObject(obj.productPrefix -> convertToJsValue(obj))
     }
 
-    private def ifThisThen(key: String, converter: JsValue => Predicate)(
-        implicit fields: Map[String, JsValue]
+    private def ifThisThen(key: String, converter: JsValue => Predicate)(implicit
+        fields: Map[String, JsValue]
     ): Option[Predicate] = {
       fields.get(key).map(converter)
     }
 
-    private def convertToJsValue(obj: Predicate) = obj match {
-      case b: BooleanPredicate => JsBoolean(b.value)
-      case i: IntPredicate     => JsNumber(i.value)
-      case s: StringPredicate  => JsString(s.value)
-    }
+    private def convertToJsValue(obj: Predicate) =
+      obj match {
+        case b: BooleanPredicate => JsBoolean(b.value)
+        case i: IntPredicate     => JsNumber(i.value)
+        case s: StringPredicate  => JsString(s.value)
+      }
   }
 }
 
@@ -138,12 +139,13 @@ object EachChoiceJsonFormat extends DefaultJsonProtocol {
       }
     }
 
-    override def write(obj: EachChoice): JsValue = obj match {
-      case a: And        => a.toJson
-      case o: Or         => o.toJson
-      case n: Not        => n.toJson
-      case r: InlineRule => r.toJson
-    }
+    override def write(obj: EachChoice): JsValue =
+      obj match {
+        case a: And        => a.toJson
+        case o: Or         => o.toJson
+        case n: Not        => n.toJson
+        case r: InlineRule => r.toJson
+      }
   }
 }
 
