@@ -1,26 +1,27 @@
 language: scala
 scala:
-  - 2.12.11
+- 2.12.11
 sudo: false
 jdk:
-  - openjdk11
+- openjdk11
 cache:
   directories:
-    - $HOME/.cache/coursier/v1
-    - $HOME/.sbt
+  - "$HOME/.cache/coursier/v1"
+  - "$HOME/.sbt"
 before_install:
-  - openssl aes-256-cbc -pass pass:$SONATYPE_PASSWORD -in .travis/secring.gpg.enc -out local.secring.gpg -d
-  - openssl aes-256-cbc -pass pass:$SONATYPE_PASSWORD -in .travis/pubring.gpg.enc -out local.pubring.gpg -d
+- openssl aes-256-cbc -pass pass:$SONATYPE_PASSWORD -in .travis/secring.gpg.enc -out
+  local.secring.gpg -d
+- openssl aes-256-cbc -pass pass:$SONATYPE_PASSWORD -in .travis/pubring.gpg.enc -out
+  local.pubring.gpg -d
 env:
   global:
-    - secure: MmyMAHnhCNXJIclWXIZIIb2ZpJZknvaqZ2HUpxf+LIsr0dSwg3OhULc6hOEsktusio4rf7/mK5FihOEz4Lb4FFAzTuTn23YyPjjNY4BHIoqF+v5sgy0z8EGUl+DymoJExQ02CRwy6gyIk0MUYbcuZMbUEg5S8v/JvLL1hgEhv+8eAN3dGrMoog8NsDuYlhzZlFXXm8DN83PZ/9boagWq+WGHajNCUC7Ra7y4TfhRUKEDZfoln39xeazQwdUFq9iZ0urGM+QhZxL6wf2G68DAHfTmor/ahVZlOMcbmhakVqxVYz17f0ovKlvD2ybBDzaqae5j/AiTkEmHTEvXzXeSJT0VHE0/JuSHH+r+1tJxnrT+zg6s9YSOUDaZRkIWmLFe/jWV3X8AZ9MwETZDQptyTgxHqIYM8HBQA8j3CkjzgLMFkZfqwVgJRc2QjUwKKttmLEM7mJlxuyNoqD5fNHhFJCJBnJtJQAV3J6CEse4a1qOQRJoFBGIp8u5l/ej9Bwdf+WVp+mXt3uQOfr6L6PgYE+Ll9gy/gAPwn8IgllYN9q/ypGc9BO2fe77uWfDgQsTjwNfNnA0wKf3YYYunNnMN58oFBjukpZZKiyUOjgEdrrcCX/I6zMRDaA2YrW4s+JG1Idr2przEouPTbNjanw0hqQzz96Gslsv6FNhRYJaJicw=
-    - secure: rUkD/vXLmdUB/hDBkregZz4YmJoG7Ro91xJbADumf4Lzfm8wO4bK1mpbsGqBDOXvp/the76MPOdu6halDw8njktfXcrwUCPQaXtn8A7+bQW1Kc1L/SpKs5G+ycGVKF8AAYUMMBRs6RX1QHQTwxSOVkOTYD6me9rYZTX6PdcW9fCw7EgIzBc8X2I8tQckCj5DIoLECxUo2bwrkL7KKkNmFPLK7Cm6jddNASqzqZo3pybeGTFuGbAsXN11b2CfINl2srjJ/gH3DDXKFlcAKpPuH7YW+3YIA/15S6xoimUFnLaUILFpNTTwxGmQwZ/h235K6kh0kWHdPdeUlGzl0yN8KgSwS1DFKLfe+VrKSD0441XyW/snwtrlC9jl/jX2A5uxaalVDD27MZj3Z8kpdSHtuaYIZ86d7yNRWqOJMcwkI7K9W4JiocBGZ373EttxVM7dywQuPPu/bwyEI2fq44/JUQD+3AJ2Exgoh1NFrHT+H+NCDXY+x7W8S+lD9adlrmvHZfNZ1I401V8u9mEApw0XWaQCIvKfqXogk4UDtzxAvJKv0J7A1k70xH59OtnU5kHWF5j1805hkVhp/1+AC6UNVaiNLAoRNSH5PQFRtfJz4WyfMmonR+ULtBsFTdw6ON1gxbHAHiAY0WQmcBwUsF3gOn8GZrXKGxizKb6QutH64wI=
-    - SONATYPE_USERNAME: ashwanthkumar
+  - SONATYPE_USERNAME: ashwanthkumar
+  - secure: pUedSAl0y9JyitLd8WZYWSPeVK4ipZ6Velb9LnU0zasYeuBZMr1Qz2cP/qbUahpk4t44gkglzMY7UnidpB5nhzyKO+Ag8UXY0/Nym+5XuiI6EiEj4AWEFfaxGI5plJf44fLYABZS/J9toLW0Y9rXK3V++Uh0JsN0CW9kNnhaVvYdnrRR6HSFUOmXpvse0Hh4keFgawJ8M9oGmesBQaifDJsYtynQkFAg3peC9X8t7fqF5Viyzio75udFUz60/l1dfeI1nW7UFLS3T581ZuCyBQaOwXMl709xMdtjZTc/LiqdsKzkWbwVo72piISlMEqi91667ZALV+ixdQ3ZpDBSoafxU+a2W4XVcqKeoQQqnn9vtc3Ah7sXykHKbwwjeSm+AmQyTnYXGMo0MdrMvWwIzD3i5DIeW8N1rZo974WMSRLBnNY+ViHVbjZ9/ko8808y/nu+ccUP2vuT7bARJROs6NCm6zTFtpBgn9CvztKnVlcTbEwc+1ZyRoj8IFVvdvzNE59LHNDMMCGPViNum7l6xC45ytMMyDQ5whscVUj5VnJW4Xj44k4g5uEVMLsipNy+whP7KvkIUe5BbfvvUeMLCsqrSduiY8pL18oxBMxRn8eDXfdZyWepRTxieJCT51I+orELvAF8T/Qc3Su5MHran1b0HvgDAKzJm8n4RhxixQo=
 deploy:
-  - provider: script
-    script: "./.travis/publish.sh"
-    skip_cleanup: true
-    on:
-      tags: true
-      jdk: openjdk11
-      scala: 2.12.11
+- provider: script
+  script: "./.travis/publish.sh"
+  skip_cleanup: true
+  on:
+    tags: true
+    jdk: openjdk11
+    scala: 2.12.11
