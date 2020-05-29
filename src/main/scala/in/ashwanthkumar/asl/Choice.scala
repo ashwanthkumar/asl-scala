@@ -3,8 +3,6 @@ package in.ashwanthkumar.asl
 import spray.json._
 import spray.json.lenses.JsonLenses._
 
-import scala.util.Try
-
 sealed trait Predicate extends Product
 sealed trait BooleanPredicate extends Predicate {
   def value: Boolean
