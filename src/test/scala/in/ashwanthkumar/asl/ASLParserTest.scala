@@ -32,9 +32,9 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    stateMachine.comment should be(Option("A simple minimal example of the States language"))
-    stateMachine.startAt should be("Hello World")
-    val pass = stateMachine.states("No-op").asInstanceOf[Pass]
+    stateMachine.Comment should be(Option("A simple minimal example of the States language"))
+    stateMachine.StartAt should be("Hello World")
+    val pass = stateMachine.States("No-op").asInstanceOf[Pass]
     pass.Result should be(Some(JsObject("x-datum" -> JsNumber(0.381018), "y-datum" -> JsNumber(622.2269926397355))))
     pass.ResultPath should be(Option("$.coords"))
     pass.Next should be(Option("End"))
@@ -53,7 +53,7 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    val taskState    = stateMachine.states("TaskState").asInstanceOf[Task]
+    val taskState    = stateMachine.States("TaskState").asInstanceOf[Task]
     taskState.Comment should be(Option("Task State example"))
     taskState.Resource should be("arn:aws:states:us-east-1:123456789012:task:HelloWorld")
     taskState.Next should be(Some("NextState"))
@@ -78,7 +78,7 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    val choiceState  = stateMachine.States("ChoiceStateX").asInstanceOf[Choice]
     choiceState.Comment should be(Option("Choice State example"))
     choiceState.Default should be("DefaultState")
     choiceState.Choices should have size 1
@@ -115,7 +115,7 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    val choiceState  = stateMachine.States("ChoiceStateX").asInstanceOf[Choice]
     choiceState.Comment should be(Option("Choice State example"))
     choiceState.Default should be("DefaultState")
     choiceState.Choices should have size 1
@@ -157,7 +157,7 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    val choiceState  = stateMachine.States("ChoiceStateX").asInstanceOf[Choice]
     choiceState.Comment should be(Option("Choice State example"))
     choiceState.Default should be("DefaultState")
     choiceState.Choices should have size 1
@@ -193,7 +193,7 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    val choiceState  = stateMachine.States("ChoiceStateX").asInstanceOf[Choice]
     choiceState.Comment should be(Option("Choice State example"))
     choiceState.Default should be("DefaultState")
     choiceState.Choices should have size 1
@@ -216,9 +216,9 @@ class ASLParserTest extends FlatSpec {
         |}
         |""".stripMargin
     val stateMachine = ASLParser.parse(stateInStateMachine(state))
-    stateMachine.comment should be(Option("A simple minimal example of the States language"))
-    stateMachine.startAt should be("Hello World")
-    val fail = stateMachine.states("FailState").asInstanceOf[Fail]
+    stateMachine.Comment should be(Option("A simple minimal example of the States language"))
+    stateMachine.StartAt should be("Hello World")
+    val fail = stateMachine.States("FailState").asInstanceOf[Fail]
     fail.Cause should be(Some("Invalid response."))
     fail.Error should be(Option("ErrorA"))
   }

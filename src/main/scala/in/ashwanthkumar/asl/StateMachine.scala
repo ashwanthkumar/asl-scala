@@ -1,4 +1,4 @@
 package in.ashwanthkumar.asl
 
 trait State
-case class StateMachine(comment: Option[String], startAt: String, states: Map[String, State])
+case class StateMachine(Comment: Option[String], StartAt: String, States: Map[String, State])

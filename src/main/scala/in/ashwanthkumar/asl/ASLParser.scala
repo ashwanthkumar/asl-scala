@@ -39,6 +39,6 @@ object ASLParser {
         stateName -> state
     }
 
-    stateMachine.copy(states = states)
+    stateMachine.copy(States = states)
   }
 }
