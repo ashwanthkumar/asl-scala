@@ -3,35 +3,39 @@ package in.ashwanthkumar.asl
 import spray.json._
 import spray.json.lenses.JsonLenses._
 
-sealed trait Function[T] extends Product {
-  def value: T
+sealed trait Predicate extends Product
+sealed trait BooleanPredicate extends Predicate {
+  def value: Boolean
 }
-sealed trait BooleanFunction             extends Function[Boolean]
-case class BooleanEquals(value: Boolean) extends BooleanFunction
+case class BooleanEquals(value: Boolean) extends BooleanPredicate
 
-sealed trait IntFunction                        extends Function[Int]
-case class NumericEquals(value: Int)            extends IntFunction
-case class NumericGreaterThan(value: Int)       extends IntFunction
-case class NumericGreaterThanEquals(value: Int) extends IntFunction
-case class NumericLessThan(value: Int)          extends IntFunction
-case class NumericLessThanEquals(value: Int)    extends IntFunction
+sealed trait IntPredicate extends Predicate {
+  def value: Int
+}
+case class NumericEquals(value: Int)            extends IntPredicate
+case class NumericGreaterThan(value: Int)       extends IntPredicate
+case class NumericGreaterThanEquals(value: Int) extends IntPredicate
+case class NumericLessThan(value: Int)          extends IntPredicate
+case class NumericLessThanEquals(value: Int)    extends IntPredicate
 
-sealed trait StringFunction                          extends Function[String]
-case class StringEquals(value: String)               extends StringFunction
-case class StringGreaterThan(value: String)          extends StringFunction
-case class StringGreaterThanEquals(value: String)    extends StringFunction
-case class StringLessThan(value: String)             extends StringFunction
-case class StringLessThanEquals(value: String)       extends StringFunction
-case class TimestampEquals(value: String)            extends StringFunction
-case class TimestampGreaterThan(value: String)       extends StringFunction
-case class TimestampGreaterThanEquals(value: String) extends StringFunction
-case class TimestampLessThan(value: String)          extends StringFunction
-case class TimestampLessThanEquals(value: String)    extends StringFunction
+sealed trait StringPredicate extends Predicate {
+  def value: String
+}
+case class StringEquals(value: String)               extends StringPredicate
+case class StringGreaterThan(value: String)          extends StringPredicate
+case class StringGreaterThanEquals(value: String)    extends StringPredicate
+case class StringLessThan(value: String)             extends StringPredicate
+case class StringLessThanEquals(value: String)       extends StringPredicate
+case class TimestampEquals(value: String)            extends StringPredicate
+case class TimestampGreaterThan(value: String)       extends StringPredicate
+case class TimestampGreaterThanEquals(value: String) extends StringPredicate
+case class TimestampLessThan(value: String)          extends StringPredicate
+case class TimestampLessThanEquals(value: String)    extends StringPredicate
 
 object FunctionJsonFormat extends DefaultJsonProtocol {
-  implicit val functionFormat = new RootJsonFormat[Function[_]] {
+  implicit val functionFormat = new RootJsonFormat[Predicate] {
     // format: OFF
-    override def read(json: JsValue): Function[_] = {
+    override def read(json: JsValue): Predicate = {
       implicit val fields: Map[String, JsValue] = json.asJsObject.fields
       ifThisThen(BooleanEquals.toString(), value => BooleanEquals(value.convertTo[Boolean]))
         .orElse(ifThisThen(NumericEquals.toString(), value => NumericEquals(value.convertTo[Int])))
@@ -53,32 +57,33 @@ object FunctionJsonFormat extends DefaultJsonProtocol {
     }
     // format: ON
 
-    override def write(obj: Function[_]): JsValue = {
+    override def write(obj: Predicate): JsValue = {
       JsObject(obj.productPrefix -> convertToJsValue(obj))
     }
 
-    private def ifThisThen(key: String, converter: JsValue => Function[_])(
+    private def ifThisThen(key: String, converter: JsValue => Predicate)(
         implicit fields: Map[String, JsValue]
-    ): Option[Function[_]] = {
+    ): Option[Predicate] = {
       fields.get(key).map(converter)
     }
 
-    private def convertToJsValue(obj: Function[_]) = obj match {
-      case b: BooleanFunction => JsBoolean(b.value)
-      case i: IntFunction     => JsNumber(i.value)
-      case s: StringFunction  => JsString(s.value)
+    private def convertToJsValue(obj: Predicate) = obj match {
+      case b: BooleanPredicate => JsBoolean(b.value)
+      case i: IntPredicate     => JsNumber(i.value)
+      case s: StringPredicate  => JsString(s.value)
     }
   }
 }
 
-case class Rule(function: Function[_], Variable: String)
+case class Rule(function: Predicate, Variable: String)
 object RuleJsonFormat extends DefaultJsonProtocol {
   import FunctionJsonFormat._
   implicit val ruleJsonFormat = new RootJsonFormat[Rule] {
     override def read(json: JsValue): Rule = {
-      val variable            = json.extract[String]('Variable)
-      val jsonWithoutVariable = json.update('Variable ! modifyOrDeleteField((variable: String) => None))
-      val function            = jsonWithoutVariable.convertTo[Function[_]]
+      val variable                                 = json.extract[String]('Variable)
+      def removeStr(input: String): Option[String] = None
+      val jsonWithoutVariable                      = json.update('Variable ! modifyOrDeleteField(removeStr))
+      val function                                 = jsonWithoutVariable.convertTo[Predicate]
       Rule(function, variable)
     }
 
@@ -102,9 +107,10 @@ object EachChoiceJsonFormat extends DefaultJsonProtocol {
   implicit val notFormat = jsonFormat2(Not)
   implicit val inlineRuleFormat = new RootJsonFormat[InlineRule] {
     override def read(json: JsValue): InlineRule = {
-      val next        = json.extract[String]('Next)
-      val withoutNext = json.update('Next ! modifyOrDeleteField((_: String) => None))
-      val rule        = withoutNext.convertTo[Rule]
+      val next                                     = json.extract[String]('Next)
+      def removeStr(input: String): Option[String] = None
+      val withoutNext                              = json.update('Next ! modifyOrDeleteField(removeStr))
+      val rule                                     = withoutNext.convertTo[Rule]
       InlineRule(rule, next)
     }
 
