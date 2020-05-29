@@ -2,7 +2,6 @@ import sbt._
 import Dependencies._
 import sbt.Keys._
 
-
 // Makes life easy when using sbt shell
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -25,10 +24,10 @@ lazy val asl = (project in file("."))
       sprayJsonLens
     )
   )
+  .settings(publishSettings: _*)
 
 lazy val publishSettings = Seq(
   publishArtifact := true,
-
   /* START - sonatype publish related settings */
   pgpSecretRing := file("local.secring.gpg"),
   pgpPublicRing := file("local.pubring.gpg"),
@@ -41,9 +40,9 @@ lazy val publishSettings = Seq(
   // disable publishing test jars
   publishArtifact in Test := false,
   // disable publishing the main docs jar
-  publishArtifact in(Compile, packageDoc) := false,
+  publishArtifact in (Compile, packageDoc) := false,
   // disable publishing the main sources jar
-  publishArtifact in(Compile, packageSrc) := true,
+  publishArtifact in (Compile, packageSrc) := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (isSnapshot.value)
@@ -74,4 +73,3 @@ lazy val publishSettings = Seq(
         </developer>
       </developers>
 )
-
