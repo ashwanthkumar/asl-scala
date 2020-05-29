@@ -5,3 +5,4 @@ jdk:
 cache:
   directories:
     - $HOME/.cache/coursier/v1
+    - $HOME/.sbt
