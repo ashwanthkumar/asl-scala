@@ -10,12 +10,14 @@ cache:
   - "$HOME/.cache/coursier/v1"
   - "$HOME/.sbt"
 before_install:
-- openssl aes-256-cbc  -md md5 -pass pass:$SONATYPE_PASSWORD -in .travis/secring.gpg.enc -out local.secring.gpg -d
-- openssl aes-256-cbc  -md md5 -pass pass:$SONATYPE_PASSWORD -in .travis/pubring.gpg.enc -out local.pubring.gpg -d
+- openssl aes-256-cbc  -md md5 -pass pass:$SONATYPE_PASSWORD -in .travis/secring.gpg.enc
+  -out local.secring.gpg -d
+- openssl aes-256-cbc  -md md5 -pass pass:$SONATYPE_PASSWORD -in .travis/pubring.gpg.enc
+  -out local.pubring.gpg -d
 env:
   global:
   - SONATYPE_USERNAME: ashwanthkumar
-  - secure: pUedSAl0y9JyitLd8WZYWSPeVK4ipZ6Velb9LnU0zasYeuBZMr1Qz2cP/qbUahpk4t44gkglzMY7UnidpB5nhzyKO+Ag8UXY0/Nym+5XuiI6EiEj4AWEFfaxGI5plJf44fLYABZS/J9toLW0Y9rXK3V++Uh0JsN0CW9kNnhaVvYdnrRR6HSFUOmXpvse0Hh4keFgawJ8M9oGmesBQaifDJsYtynQkFAg3peC9X8t7fqF5Viyzio75udFUz60/l1dfeI1nW7UFLS3T581ZuCyBQaOwXMl709xMdtjZTc/LiqdsKzkWbwVo72piISlMEqi91667ZALV+ixdQ3ZpDBSoafxU+a2W4XVcqKeoQQqnn9vtc3Ah7sXykHKbwwjeSm+AmQyTnYXGMo0MdrMvWwIzD3i5DIeW8N1rZo974WMSRLBnNY+ViHVbjZ9/ko8808y/nu+ccUP2vuT7bARJROs6NCm6zTFtpBgn9CvztKnVlcTbEwc+1ZyRoj8IFVvdvzNE59LHNDMMCGPViNum7l6xC45ytMMyDQ5whscVUj5VnJW4Xj44k4g5uEVMLsipNy+whP7KvkIUe5BbfvvUeMLCsqrSduiY8pL18oxBMxRn8eDXfdZyWepRTxieJCT51I+orELvAF8T/Qc3Su5MHran1b0HvgDAKzJm8n4RhxixQo=
+  - secure: "F1rXGIN/TGm4+xC99za+Pnie/T4iM8mN9UZVNUbfbrDvtqmmnXpG7a01TV9YI9sZriM9vn0s+YXlCiASMlQO8Cgft6xTE5lq6kAQV9ZkzqXazDAerwNky9PmfRMCoJqNe6I40xMDf19uSq0VXAHxkua35MjmWqqPsLxr1w371DU6QEDZp+zLcmN5D5pgZGYaSEe9ZYzqRMw84Vvw6xQ5ZNphqzj0jsWGdtdcFgVhWpdcLGkG2L/HNudN/d1nwJG1YpBHWql0uZecgAbt2atVh35KyMZ+uC7xOSaMROjk+Cdci/zzfaUVJ6INkd9UzwZTX4YzzIy9hbJmMMi0QtL3xmyd23hgHRJtMl8nfPdlKRbB6TY698o31cn365cWrTXGeWUKipw+altOnGW6TrjbLbk6hmQEeLqSISw+xjIx1EmXqZSyPvKA3vzPx2PH8FTQQySF1TifyQRI0Iz/vwAqFhH5gQ2882uO6byn1ZBRl/+xUacllpT4kNB1hrrsYm5CKGR5yxgCIO5AbkhsZKnorBSwhbIVwAhVFD3GNatOsLpjTOmcY4q1/94NKdPNb3jxmDzZ2L03NwaU4/f8F8arwcDXnJTLq/9kEsGBSFARF+2f8xynsVOaXCNk0ncUmQpBokrapsF+uC61MxNMg2OooNlh+doD9P2y9XOxMOn7zuw="
 deploy:
 - provider: script
   script: "./.travis/publish.sh"
