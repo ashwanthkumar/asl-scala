@@ -2,8 +2,6 @@
 
 set -ex
 
-cd ..
-
 sbt +publishSigned
 sbt sonatypeReleaseAll
 
