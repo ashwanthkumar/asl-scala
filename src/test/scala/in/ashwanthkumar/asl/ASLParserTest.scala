@@ -1,7 +1,7 @@
 package in.ashwanthkumar.asl
 
 import org.scalatest.FlatSpec
-import org.scalatest.Matchers.{be, convertToAnyShouldWrapper}
+import org.scalatest.Matchers.{be, convertToAnyShouldWrapper, have, size}
 import spray.json.{JsNumber, JsObject}
 
 class ASLParserTest extends FlatSpec {
@@ -60,4 +60,150 @@ class ASLParserTest extends FlatSpec {
     taskState.TimeoutSeconds should be(Option(300L))
     taskState.HeartbeatSeconds should be(Option(60L))
   }
+
+  it should "parse Choice State with InlineRule" in {
+    val state =
+      """
+        |"ChoiceStateX": {
+        |  "Comment": "Choice State example",
+        |  "Type": "Choice",
+        |  "Choices": [
+        |    {
+        |      "Variable": "$.value",
+        |      "NumericEquals": 0,
+        |      "Next": "ValueIsZero"
+        |    }
+        |  ],
+        |  "Default": "DefaultState"
+        |}
+        |""".stripMargin
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    choiceState.Comment should be(Option("Choice State example"))
+    choiceState.Default should be("DefaultState")
+    choiceState.Choices should have size 1
+
+    val onlyChoiceRule = choiceState.Choices.head
+    val inlineRule     = onlyChoiceRule.asInstanceOf[InlineRule]
+    inlineRule.Next should be("ValueIsZero")
+    inlineRule.rule.Variable should be("$.value")
+    inlineRule.rule.function should be(NumericEquals(0))
+  }
+
+  it should "parse Choice State with And" in {
+    val state =
+      """
+        |"ChoiceStateX": {
+        |  "Comment": "Choice State example",
+        |  "Type": "Choice",
+        |  "Choices": [
+        |  {
+        |      "And": [
+        |        {
+        |          "Variable": "$.value",
+        |          "NumericGreaterThanEquals": 20
+        |        },
+        |        {
+        |          "Variable": "$.value",
+        |          "NumericLessThan": 30
+        |        }
+        |      ],
+        |      "Next": "ValueInTwenties"
+        |   }
+        |  ],
+        |  "Default": "DefaultState"
+        |}
+        |""".stripMargin
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    choiceState.Comment should be(Option("Choice State example"))
+    choiceState.Default should be("DefaultState")
+    choiceState.Choices should have size 1
+
+    val onlyChoiceRule = choiceState.Choices.head
+    val and            = onlyChoiceRule.asInstanceOf[And]
+    and.Next should be("ValueInTwenties")
+    and.And should have size 2
+    val first = and.And.head
+    first.Variable should be("$.value")
+    first.function should be(NumericGreaterThanEquals(20))
+    val second = and.And.apply(1)
+    second.Variable should be("$.value")
+    second.function should be(NumericLessThan(30))
+  }
+
+  it should "parse Choice State with Or" in {
+    val state =
+      """
+        |"ChoiceStateX": {
+        |  "Comment": "Choice State example",
+        |  "Type": "Choice",
+        |  "Choices": [
+        |  {
+        |      "Or": [
+        |        {
+        |          "Variable": "$.value",
+        |          "NumericGreaterThanEquals": 20
+        |        },
+        |        {
+        |          "Variable": "$.value",
+        |          "NumericLessThan": 30
+        |        }
+        |      ],
+        |      "Next": "ValueInTwenties"
+        |   }
+        |  ],
+        |  "Default": "DefaultState"
+        |}
+        |""".stripMargin
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    choiceState.Comment should be(Option("Choice State example"))
+    choiceState.Default should be("DefaultState")
+    choiceState.Choices should have size 1
+
+    val onlyChoiceRule = choiceState.Choices.head
+    val or             = onlyChoiceRule.asInstanceOf[Or]
+    or.Next should be("ValueInTwenties")
+    or.Or should have size 2
+    val first = or.Or.head
+    first.Variable should be("$.value")
+    first.function should be(NumericGreaterThanEquals(20))
+    val second = or.Or.apply(1)
+    second.Variable should be("$.value")
+    second.function should be(NumericLessThan(30))
+  }
+
+  it should "parse Choice State with Not" in {
+    val state =
+      """
+        |"ChoiceStateX": {
+        |  "Comment": "Choice State example",
+        |  "Type": "Choice",
+        |  "Choices": [
+        |    {
+        |        "Not": {
+        |          "Variable": "$.type",
+        |          "StringEquals": "Private"
+        |        },
+        |        "Next": "Public"
+        |    }
+        |  ],
+        |  "Default": "DefaultState"
+        |}
+        |""".stripMargin
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    val choiceState  = stateMachine.states("ChoiceStateX").asInstanceOf[Choice]
+    choiceState.Comment should be(Option("Choice State example"))
+    choiceState.Default should be("DefaultState")
+    choiceState.Choices should have size 1
+
+    val onlyChoiceRule = choiceState.Choices.head
+    val not            = onlyChoiceRule.asInstanceOf[Not]
+    not.Next should be("Public")
+    val rule = not.Not
+    rule.Variable should be("$.type")
+    rule.function should be(StringEquals("Private"))
+  }
+
 }
