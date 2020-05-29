@@ -9,10 +9,8 @@ cache:
   - "$HOME/.cache/coursier/v1"
   - "$HOME/.sbt"
 before_install:
-- openssl aes-256-cbc -pass pass:$SONATYPE_PASSWORD -in .travis/secring.gpg.enc -out
-  local.secring.gpg -d
-- openssl aes-256-cbc -pass pass:$SONATYPE_PASSWORD -in .travis/pubring.gpg.enc -out
-  local.pubring.gpg -d
+- openssl aes-256-cbc  -md md5 -pass pass:$SONATYPE_PASSWORD -in .travis/secring.gpg.enc -out local.secring.gpg -d
+- openssl aes-256-cbc  -md md5 -pass pass:$SONATYPE_PASSWORD -in .travis/pubring.gpg.enc -out local.pubring.gpg -d
 env:
   global:
   - SONATYPE_USERNAME: ashwanthkumar
