@@ -5,6 +5,3 @@ import spray.json.lenses.JsonLenses._
 
 trait State
 case class StateMachine(comment: Option[String], startAt: String, states: Map[String, State])
-
-
-
