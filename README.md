@@ -24,7 +24,7 @@ We support parsing the spec with following type of states
 - [x] Choice
 - [x] Fail
 - [ ] Wait
-- [ ] Succeed
+- [x] Succeed
 - [ ] Parallel
 - [ ] Map
 

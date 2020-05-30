@@ -11,6 +11,7 @@ object JsonFormats extends DefaultJsonProtocol {
   implicit val taskFormat    = jsonFormat13(Task)
   implicit val choiceFormat  = jsonFormat5(Choice)
   implicit val failFormat    = jsonFormat3(Fail)
+  implicit val succeedFormat = jsonFormat1(Succeed)
 }
 
 object ASLParser {
@@ -34,6 +35,8 @@ object ASLParser {
             stateSpec.convertTo[Choice]
           case "Fail" =>
             stateSpec.convertTo[Fail]
+          case "Succeed" =>
+            stateSpec.convertTo[Succeed]
         }
 
         stateName -> state

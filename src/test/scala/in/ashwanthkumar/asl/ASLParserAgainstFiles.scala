@@ -20,4 +20,14 @@ class ASLParserAgainstFiles extends FlatSpec {
     stateMachine.States("FirstMatchState") shouldBe a[Task]
     stateMachine.States("DefaultState") shouldBe a[Fail]
   }
+
+  // Ref - https://blog.coinbase.com/aws-step-functions-state-machines-bifrost-and-building-deployers-5e3745fe645b
+  it should "parse coinbase-blog-bifrost.json" in {
+    val input        = readJson("/coinbase-blog-bifrost.json")
+    val stateMachine = ASLParser.parse(input)
+    stateMachine.States("CallLambda") shouldBe a[Task]
+    stateMachine.States("Worked?") shouldBe a[Choice]
+    stateMachine.States("Success") shouldBe a[Succeed]
+    stateMachine.States("Failure") shouldBe a[Fail]
+  }
 }

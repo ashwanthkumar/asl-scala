@@ -223,4 +223,18 @@ class ASLParserTest extends FlatSpec {
     fail.Error should be(Option("ErrorA"))
   }
 
+  it should "parse Succeed State" in {
+    val state =
+      """
+        |"SuccessState": {
+        |  "Type": "Succeed"
+        |}
+        |""".stripMargin
+    val stateMachine = ASLParser.parse(stateInStateMachine(state))
+    stateMachine.Comment should be(Option("A simple minimal example of the States language"))
+    stateMachine.StartAt should be("Hello World")
+    val succeedState = stateMachine.States("SuccessState").asInstanceOf[Succeed]
+    succeedState.Comment should be(None)
+  }
+
 }
