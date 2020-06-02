@@ -40,9 +40,9 @@ lazy val publishSettings = Seq(
   publishArtifact in Test := false,
   // Ref - https://github.com/xerial/sbt-sonatype/issues/30#issuecomment-342532067
   // we'll not need this once this issue is updated / fixed -- https://issues.sonatype.org/browse/OSSRH-58035
-  sources in (Compile, doc) := Seq(),
+//  sources in (Compile, doc) := Seq(),
   // we need to publish javadoc for Sonatype
-  publishArtifact in (Compile, packageDoc) := true,
+//    publishArtifact in (Compile, packageDoc) := true,
   publishArtifact in (Compile, packageSrc) := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
